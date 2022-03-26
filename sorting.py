@@ -1,3 +1,5 @@
+from msilib.schema import Binary
+from priority_queues import BinaryHeap
 def merge(array, lo, mid, hi):
     '''
     merge for merge-sort algorithm
@@ -52,4 +54,16 @@ def counting_sort(l, maxElem):
             print(big_list[i])
     
     
+def heap_sort(l):
+    '''
+    Very good, exploits binary heap structure, computational time is 2Nlog(N)
+    '''
+    out = []
+    heap = BinaryHeap()
+    for x in l:
+        heap.insert(x)
+    while len(heap) != 0:
+        el = heap.remove_max()
+        el.append(out)
+    return out
     
