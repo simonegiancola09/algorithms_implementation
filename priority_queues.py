@@ -9,9 +9,9 @@ class BinaryHeap:
         # parent bigger than children
     def __len__(self):
         return len(self.tree)
-    def parent(k):
+    def parent(self, k):
         return k // 2
-    def children(k):
+    def children(self, k):
         if k > len(self) // 2:
             raise Exception('Value of index is too high, no children detected')
         return 2 * k, 2 * k + 1
@@ -47,7 +47,7 @@ class BinaryHeap:
         first = self.tree[0]
         first_ind = 0
 
-        while (first <= self.tree[self.children(first_ind)[0]] or first <= self.tree[self.children(first_ind)[1])]:
+        while (first <= self.tree[self.children(first_ind)[0]] or first <= self.tree[self.children(first_ind)[1]]):
             right = self.tree[self.children(first_ind)[0]]
             left = self.tree[self.children(first_ind)[0]]
             # exchange with larger children
