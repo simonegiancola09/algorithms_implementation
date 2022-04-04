@@ -1,4 +1,5 @@
-from node_stack_and_queue import Node
+from turtle import right
+from node_stack_and_queue import Node, Queue_Linked_List
 class BinaryHeap:
     '''
     Binary Heap class implemented with a list. Heapsort function in sorting.py script. 
@@ -208,6 +209,143 @@ class BinarySearchTree:
                 return node.left.size()
         # never gets here
         return inside_rank(key, node)
+    def select_node(self, rank):
+        if rank < 0:
+            return None
+        elif rank > self.size():
+            return None
+        def inside_select_node(node, rank):
+            if node == None:
+                return None
+            s = node.left.size()
+            if s > rank:
+                # go left
+                inside_select_node(node.left, rank)
+            elif s < rank:
+                # go right
+                inside_select_node(node.right, rank - s - 1)
+            else:
+                return node
+        node = self.root
+
+        node = inside_select_node(node, rank)
+        return node.key
+    def inorder_traversal(self):
+        queue = Queue_Linked_List()
+        def inner_inorder_traversal(node, queue):
+            if node == None:
+                return None
+            queue.enqueue(inner_inorder_traversal(node.left, queue))
+            queue.enqueue(node.key)
+            queue.enqueue(inner_inorder_traversal(node.right, queue))
+            return queue
+        queue = inner_inorder_traversal(self.root, queue)
+        return queue
+    
+    def delete(self):
+        pass
+    # missing
+
+class RedBlackNode:
+    def __init__(self, key, color, value=None,
+                left=None, parent=None, right=None):
+        self.key = key
+        # color is the color of the link parent - node
+        self.color = color
+        self.value = value
+        self.left = left
+        self.parent = parent
+        self.right = right
+    def is_red(self):
+        return self.color.upper() == 'R'
+
+class RedBlackTree:
+    # assume left leaning red black tree
+    # this is just a convention used in class
+    def __init__(self):
+        self.root = None
+        self.size = 0
+    
+    # elementary operations
+
+    def rotate_left(self, node):
+        '''
+        Orient right leaning red link to the left
+        '''
+        assert node.right.is_red()
+
+        x = node.right
+        node.right = x.left
+
+        x.left = node
+
+        x.color = node.color
+        node.color = 'R'
+        # need to return to make it operative in insert function
+        return x
+    def rotate_right(self, node):
+        '''
+        Orient double left leaning red tree to the right temporarily
+        '''
+        assert node.left.is_red()
+        assert node.left.left.is_red()
+        # the double red children
+        child = node.left
+        grandchild = node.left.left
+
+        # now to the left of node we have the child material
+        node.left = child.right
+        # exchange parenthood
+        child.parent = node.parent
+        node.parent = child
+        # update colors, now double red link at the top
+        child.color = 'B'
+        node.color = 'R'
+        # return the head
+        return child
+
+    def color_split(self, node):
+        '''
+        Change a double red node into a parent red and children black structure
+        '''
+        assert node.is_red() == 0
+        assert(node.left.is_red()) == 1
+        assert(node.right.is_red()) == 1
+        node.color = 'R'
+        node.left.color = 'B'
+        node.right.color = 'B'
+
+    def insert(self, key, val):
+        def inner_insert(head, key, val):
+            if head == None:
+                return RedBlackNode(key, 'R', val)
+            if key < head.key:
+                head.left = inner_insert(head.left, key, val)
+            elif key > head.key:
+                head.right = inner_insert(head.right, key, val)
+            else:
+                head.val = val
+            # now the three cases
+
+            if (not head.left.is_red() and head.right.is_red()):
+                head = self.rotate_left(head)
+            if (head.left.is_red() and head.left.left.is_red()):
+                head = self.rotate_right(head)
+            if (head.left.is_red and head.right.is_red()):
+                self.flipcolors(head)
+            return head
+
+
+        
+        
+
+        
+
+
+
+
+
+
     
 
 
